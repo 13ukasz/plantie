@@ -1,0 +1,7 @@
+[0/1] Re-running CMake...
+-- Building ESP-IDF components for target esp32c6
+NOTICE: Manifest files have changed, solving dependencies.
+.......HINT: Please check manifest file of the following component(s): temperature_sensor
+-- Configuring incomplete, errors occurred!
+FAILED: build.ninja 
+/usr/bin/cmake --regenerate-during-build -S/home/ukasz/plantie -B/home/ukasz/plantie/build

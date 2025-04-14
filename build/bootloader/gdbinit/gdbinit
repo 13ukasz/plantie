@@ -1,0 +1,2 @@
+source /home/ukasz/plantie/build/bootloader/gdbinit/symbols
+source /home/ukasz/plantie/build/bootloader/gdbinit/connect
