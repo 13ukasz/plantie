@@ -6,11 +6,11 @@
 
 #include "moisture_sensor.h"
 
-static const char *TAG = "ADC_EXAMPLE";
+static const char *TAG = "Plantie";
 
 void app_main(void)
 {
     ESP_LOGI(TAG, "Starting ADC Task...");
 
-    xTaskCreate(moisture_sensor_fun, "moisture_sensor_fun", 2048, NULL, 1, NULL);
+    xTaskCreate(moisture_sensor_task, "moisture_sensor_fun", 2048, NULL, 1, NULL);
 }
