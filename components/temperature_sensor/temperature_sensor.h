@@ -1,6 +1,6 @@
 #ifndef TEMPERATURE_SENSOR_H
 #define TEMPERATURE_SENSOR_H
 
-#include "ds18b20_types.h"
+void sensor_read_task(void *pvParameters);
 
 #endif TEMPERATURE_SENSOR_H
