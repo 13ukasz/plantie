@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "ds18b20.h": "c",
-        "onewire_bus.h": "c",
-        "ds18b20_types.h": "c",
-        "onewire_device.h": "c",
-        "stdio.h": "c"
-    }
-}
