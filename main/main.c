@@ -10,7 +10,6 @@ static const char *TAG = "Plantie";
 
 void app_main(void)
 {
-    ESP_LOGI(TAG, "Starting ADC Task...");
-
-    xTaskCreate(moisture_sensor_task, "moisture_sensor_fun", 2048, NULL, 1, NULL);
+    /* ADC Task - temporarily disabled for debugging puroses */
+    // xTaskCreate(moisture_sensor_task, "moisture_sensor_fun", 2048, NULL, 1, NULL);
 }
