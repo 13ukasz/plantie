@@ -5,7 +5,7 @@
 #include "ds18b20.h"
 #include "onewire_bus.h"
 
-#define ONEWIRE_BUS_GPIO 0
+#define ONEWIRE_BUS_GPIO 1
 
 static float temperature = 0.0;
 static ds18b20_device_handle_t ds18b20 = NULL;
