@@ -13,7 +13,7 @@ static onewire_bus_handle_t bus = NULL;
 
 static const char *TAG = "DS18B20";
 
-void sensor_init(void)
+static void sensor_init(void)
 {
     onewire_bus_config_t bus_config = {
         .bus_gpio_num = ONEWIRE_BUS_GPIO,
@@ -37,11 +37,16 @@ void sensor_init(void)
     ESP_ERROR_CHECK(onewire_del_device_iter(iter));
 }
 
-void sensor_read(void)
+static void sensor_read(void)
 {
     ESP_ERROR_CHECK(ds18b20_trigger_temperature_conversion(ds18b20));
     ESP_ERROR_CHECK(ds18b20_get_temperature(ds18b20, &temperature));
     ESP_LOGI(TAG, "Temperature: %.2f°C", temperature);
+}
+
+float get_temperature(void)
+{
+    return temperature;
 }
 
 void sensor_read_task(void *pvParameters)
