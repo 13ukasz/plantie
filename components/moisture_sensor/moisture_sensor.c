@@ -7,7 +7,6 @@
 
 #include "moisture_sensor.h"
 
-
 #define RELAY_GPIO        4
 #define MAX_ADC_VALUE     4095
 #define REFERENCE_VOLTAGE 3.3   // V
