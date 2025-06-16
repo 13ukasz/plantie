@@ -13,8 +13,9 @@
 
 static const char *TAG = "MoistureSensor";
 
-float moisture = 0.0;
+bool water_pump_status   = false;
 
+float moisture           = 0.0;
 static float min_voltage = 0.8;
 static float max_voltage = 1.8;
 
@@ -86,8 +87,10 @@ void moisture_sensor_task(void *pvParameters)
                 alert_triggered = true;
             }
             gpio_set_level(RELAY_GPIO, 1);
+            water_pump_status = true;
         } else if (moisture >= 50.0f) {
             gpio_set_level(RELAY_GPIO, 0);
+            water_pump_status = false;
         }
         
         ESP_LOGI(TAG, "ADC Voltage: %.3f", adc_voltage);

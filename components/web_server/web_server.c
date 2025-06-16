@@ -13,6 +13,7 @@
 #include "esp_netif.h"
 #include "esp_tls.h"
 #include "esp_check.h"
+#include "driver/gpio.h"
 
 #include "temperature_sensor.h" 
 #include "moisture_sensor.h"
@@ -25,11 +26,25 @@
 #endif  // !CONFIG_IDF_TARGET_LINUX
 
 #define EXAMPLE_HTTP_QUERY_KEY_MAX_LEN  (64)
+#define RELAY_GPIO 4
 
 static const char *TAG = "HTMLServer";
 
-// Embedded HTML page with live update
-const char* index_html = "<!DOCTYPE html><html><head><meta charset='utf-8'><title>ESP32 Sensor</title></head><body><h1>ESP32 Sensor</h1><p>Temperature: <span id='temp'>--</span> °C</p><p>Moisture: <span id='moist'>--</span> %</p><script>setInterval(()=>{fetch('/api/data').then(r=>r.json()).then(d=>{document.getElementById('temp').textContent=d.temperature;document.getElementById('moist').textContent=d.moisture;});},1000);</script></body></html>";
+const char* index_html =
+    "<!DOCTYPE html><html><head><meta charset='utf-8'><title>ESP32 Sensor</title></head><body>"
+    "<h1>ESP32 Sensor</h1>"
+    "<p>Temperature: <span id='temp'>--</span> °C</p>"
+    "<p>Moisture: <span id='moist'>--</span> %</p>"
+    "<p>Water pump status: <span id='pump'>OFF</span></p>"   // <-- nowe pole statusu
+    "<script>"
+    "setInterval(()=>{"
+    "fetch('/api/data').then(r=>r.json()).then(d=>{"
+    "document.getElementById('temp').textContent=d.temperature;"
+    "document.getElementById('moist').textContent=d.moisture;"
+    "document.getElementById('pump').textContent=d.pump;"
+    "});"
+    "},1000);"
+    "</script></body></html>";
 
 esp_err_t index_get_handler(httpd_req_t *req)
 {
@@ -47,13 +62,15 @@ httpd_uri_t index_page = {
 
 esp_err_t data_get_handler(httpd_req_t *req)
 {
-    char json_response[128];
+    char json_response[256];
     snprintf(json_response, sizeof(json_response),
-             "{\"temperature\": %.2f, \"moisture\": %.2f}",
-             temperature, moisture);
+             "{\"temperature\": %.2f, \"moisture\": %.2f, \"pump\": \"%s\"}",
+             temperature, moisture,
+             water_pump_status ? "ON" : "OFF");
 
     httpd_resp_set_type(req, "application/json");
     httpd_resp_send(req, json_response, HTTPD_RESP_USE_STRLEN);
+
     return ESP_OK;
 }
 
@@ -61,6 +78,26 @@ httpd_uri_t data_page = {
     .uri       = "/api/data",
     .method    = HTTP_GET,
     .handler   = data_get_handler,
+    .user_ctx  = NULL
+};
+
+esp_err_t trigger_post_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Button pressed! Executing action...");
+
+    gpio_set_level(RELAY_GPIO, !gpio_get_level(RELAY_GPIO));
+
+    const char* resp = "OK";
+    httpd_resp_set_type(req, "text/plain");
+    httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
+
+    return ESP_OK;
+}
+
+httpd_uri_t trigger_uri = {
+    .uri       = "/api/trigger",
+    .method    = HTTP_POST,
+    .handler   = trigger_post_handler,
     .user_ctx  = NULL
 };
 
@@ -90,6 +127,7 @@ static httpd_handle_t start_webserver(void)
         ESP_LOGI(TAG, "Registering URI handlers");
         httpd_register_uri_handler(server, &index_page);
         httpd_register_uri_handler(server, &data_page); 
+        httpd_register_uri_handler(server, &trigger_uri);
         return server;
     }
 

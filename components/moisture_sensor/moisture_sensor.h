@@ -1,10 +1,18 @@
 #ifndef MOISTURE_SENSOR_H
 #define MOISTURE_SENSOR_H
 
+
+/**
+ * @brief Current water pump status.
+ *
+ * Monitors relay state and gives 1 if it is turned on and 0 if turned off.
+ */
+extern bool water_pump_status;
+
 /**
  * @brief Current ADC voltage from capacitive moisture sensor.
  *
- * This variable holds information about current ADC voltage
+ * This variable holds information about current ADC voltage.
  */
 extern float moisture;
 
