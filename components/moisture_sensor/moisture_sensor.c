@@ -7,6 +7,7 @@
 
 #include "moisture_sensor.h"
 
+#define RELAY_GPIO        4
 #define MAX_ADC_VALUE     4095
 #define REFERENCE_VOLTAGE 3.3   // V
 
@@ -52,6 +53,19 @@ void moisture_sensor_task(void *pvParameters)
 
     while (1) {
         float adc_voltage = read_adc_voltage();
+
+        /* Sometimes at boot-up 0.0 voltage is being read, causing the pump to be triggered*/
+        if (adc_voltage == 0.0) {
+            continue; 
+        }
+
+        /* Trigger water pump */
+        if (1.2 > adc_voltage) {
+            ESP_LOGI(TAG, "Moisture too low, triggering water pump");
+            gpio_set_level(RELAY_GPIO, 1);
+            vTaskDelay(pdMS_TO_TICKS(2000));
+            gpio_set_level(RELAY_GPIO, 0);
+        } 
         
         ESP_LOGI(TAG, "ADC Voltage: %.3f", adc_voltage);
 
