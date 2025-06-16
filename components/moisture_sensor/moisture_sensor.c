@@ -13,6 +13,8 @@
 
 static const char *TAG = "MoistureSensor";
 
+static float adc_voltage;
+
 static int configure_adc(void)
 {
     int ret = adc1_config_width(ADC_WIDTH_BIT_12);
@@ -43,6 +45,11 @@ static float read_adc_voltage()
     return ((float)raw_value / MAX_ADC_VALUE) * REFERENCE_VOLTAGE;
 }
 
+float get_moisture(void)
+{
+    return adc_voltage;
+}
+
 void moisture_sensor_task(void *pvParameters)
 {   
     int ret = configure_adc();
@@ -52,7 +59,7 @@ void moisture_sensor_task(void *pvParameters)
     }
 
     while (1) {
-        float adc_voltage = read_adc_voltage();
+        adc_voltage = read_adc_voltage();
 
         /* Sometimes at boot-up 0.0 voltage is being read, causing the pump to be triggered*/
         if (adc_voltage == 0.0) {

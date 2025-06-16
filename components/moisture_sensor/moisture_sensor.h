@@ -2,6 +2,15 @@
 #define MOISTURE_SENSOR_H
 
 /**
+ * @brief Get the current moisture reading.
+ *
+ * This function returns the most recently read ADC voltage value
+ *
+ * @return Current temperature in degrees Celsius.
+ */
+int get_moisture(void);
+
+/**
  * @brief Task to read moisture sensor data.
  *
  * This function runs as a FreeRTOS task. It reads raw ADC values from the moisture
@@ -11,4 +20,4 @@
  */
 void moisture_sensor_task(void *pvParameters);
 
-#endif
+#endif // MOISTURE_SENSOR_H
