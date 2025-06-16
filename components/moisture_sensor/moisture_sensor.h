@@ -2,13 +2,11 @@
 #define MOISTURE_SENSOR_H
 
 /**
- * @brief Get the current moisture reading.
+ * @brief Current ADC voltage from capacitive moisture sensor.
  *
- * This function returns the most recently read ADC voltage value
- *
- * @return Current temperature in degrees Celsius.
+ * This variable holds information about current ADC voltage
  */
-int get_moisture(void);
+extern float moisture;
 
 /**
  * @brief Task to read moisture sensor data.

@@ -1,15 +1,17 @@
 #ifndef TEMPERATURE_SENSOR_H
 #define TEMPERATURE_SENSOR_H
 
-/**
- * @brief Get the current temperature reading.
- *
- * This function returns the most recently read temperature value
- * from the sensor.
- *
- * @return Current temperature in degrees Celsius.
+/** 
+ * @brief Current temperature in degrees Celsius.
+ * 
+ * This global variable holds the latest measured or computed temperature 
+ * value. It is used throughout the system for temperature monitoring, 
+ * control logic, and logging.
+ * 
+ * @note The variable should be updated periodically by a temperature 
+ *       sensor reading function.
  */
-float get_temperature(void);
+extern float temperature;
 
 /**
  * @brief FreeRTOS task to periodically read temperature sensor.

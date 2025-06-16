@@ -7,7 +7,7 @@
 
 #define ONEWIRE_BUS_GPIO 1
 
-static float temperature = 0.0;
+float temperature = 0.0;
 static ds18b20_device_handle_t ds18b20 = NULL;
 static onewire_bus_handle_t bus = NULL;
 
@@ -42,11 +42,6 @@ static void sensor_read(void)
     ESP_ERROR_CHECK(ds18b20_trigger_temperature_conversion(ds18b20));
     ESP_ERROR_CHECK(ds18b20_get_temperature(ds18b20, &temperature));
     ESP_LOGI(TAG, "Temperature: %.2f°C", temperature);
-}
-
-float get_temperature(void)
-{
-    return temperature;
 }
 
 void sensor_read_task(void *pvParameters)

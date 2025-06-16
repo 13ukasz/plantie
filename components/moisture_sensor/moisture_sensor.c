@@ -13,7 +13,10 @@
 
 static const char *TAG = "MoistureSensor";
 
-static float adc_voltage;
+float moisture = 0.0;
+
+static float min_voltage = 0.8;
+static float max_voltage = 1.8;
 
 static int configure_adc(void)
 {
@@ -45,13 +48,21 @@ static float read_adc_voltage()
     return ((float)raw_value / MAX_ADC_VALUE) * REFERENCE_VOLTAGE;
 }
 
-float get_moisture(void)
+void calculate_moisture(float adc_voltage)
 {
-    return adc_voltage;
+    if (adc_voltage > max_voltage) {
+        max_voltage = adc_voltage;
+    } else if (adc_voltage < min_voltage) {
+        min_voltage = adc_voltage;
+    }
+
+    moisture = (1.0f - (adc_voltage - min_voltage) / (max_voltage - min_voltage)) * 100.0f;
 }
 
 void moisture_sensor_task(void *pvParameters)
 {   
+    bool alert_triggered = false;
+
     int ret = configure_adc();
     if (0 != ret) {
         ESP_LOGE(TAG, "Failed to configure ADC");
@@ -59,22 +70,28 @@ void moisture_sensor_task(void *pvParameters)
     }
 
     while (1) {
-        adc_voltage = read_adc_voltage();
+        float adc_voltage = read_adc_voltage();
 
         /* Sometimes at boot-up 0.0 voltage is being read, causing the pump to be triggered*/
         if (adc_voltage == 0.0) {
             continue; 
         }
 
+        calculate_moisture(adc_voltage);
+
         /* Trigger water pump */
-        if (1.2 > adc_voltage) {
-            ESP_LOGI(TAG, "Moisture too low, triggering water pump");
+        if (moisture < 30.0f) {
+            if (!alert_triggered) {
+                ESP_LOGI(TAG, "Moisture too low, triggering water pump");
+                alert_triggered = true;
+            }
             gpio_set_level(RELAY_GPIO, 1);
-            vTaskDelay(pdMS_TO_TICKS(2000));
+        } else if (moisture >= 50.0f) {
             gpio_set_level(RELAY_GPIO, 0);
-        } 
+        }
         
         ESP_LOGI(TAG, "ADC Voltage: %.3f", adc_voltage);
+        ESP_LOGI(TAG, "Moisture percent: %.2f", moisture);
 
         vTaskDelay(pdMS_TO_TICKS(1000)); 
     }
