@@ -31,11 +31,22 @@
 static const char *TAG = "HTMLServer";
 
 const char* index_html =
-    "<!DOCTYPE html><html><head><meta charset='utf-8'><title>ESP32 Sensor</title></head><body>"
+    "<!DOCTYPE html><html><head><meta charset='utf-8'>"
+    "<title>ESP32 Sensor</title>"
+    "<style>"
+    "body { font-family: Arial, sans-serif; background-color: #f0f4f8; color: #333; padding: 20px; }"
+    "h1 { color: #0077cc; }"
+    ".sensor-box { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 300px; }"
+    "p { font-size: 18px; margin: 10px 0; }"
+    "span { font-weight: bold; }"
+    "</style>"
+    "</head><body>"
+    "<div class='sensor-box'>"
     "<h1>ESP32 Sensor</h1>"
-    "<p>Temperature: <span id='temp'>--</span> °C</p>"
-    "<p>Moisture: <span id='moist'>--</span> %</p>"
-    "<p>Water pump status: <span id='pump'>OFF</span></p>"   // <-- nowe pole statusu
+    "<p>🌡 Temperature: <span id='temp'>--</span> °C</p>"
+    "<p>🌱 Moisture: <span id='moist'>--</span> %</p>"
+    "<p>💧 Water pump status: <span id='pump'>OFF</span></p>"
+    "</div>"
     "<script>"
     "setInterval(()=>{"
     "fetch('/api/data').then(r=>r.json()).then(d=>{"
