@@ -31,7 +31,7 @@ idf.py flash
 
 ## Hardware
 
-- ESP32 Development Board
+- ESP32C6 Development Board
 - Soil Moisture Sensor (ADC)
 - DS18B20 Temperature Sensor (GPIO 1)
 - Relay Module (GPIO 4)
