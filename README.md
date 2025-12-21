@@ -7,7 +7,7 @@ A smart plant watering system based on ESP32 that monitors soil moisture and tem
 - **Automatic Watering**: Measures soil moisture and automatically triggers water pump when moisture is too low
 - **Temperature Monitoring**: Reads ambient temperature via DS18B20 sensor
 - **Web Interface**: View sensor parameters on an HTML dashboard
-- **Zigbee Control**: Optional remote pump control via Zigbee (compatible with home assistants like Alexa)
+- **Zigbee Control**: Optional remote pump control via Zigbee (can be connected to home assistants like Alexa)
 
 ## Components
 
